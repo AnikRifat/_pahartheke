@@ -149,49 +149,41 @@
         $discountRules = App\DiscountRule::where('status', 1)
         ->where('expire_date', '>=', date('Y-m-d'))
         ->orderBy('conditon_value',  'asc')
-        ->where('conditon_value', '>=',$total)
         ->get();
 
 
-
         $total_rules_discount = 0;
-        $amount_need_toadd_for_dis= '';
-        if ($discountRules) {
-            foreach ($discountRules as $discountRule) {
-                switch ($discountRule->type) {
-                  case 2: // Flat discount
-                    if ($discountRule->condition_key == 1) { //Total Amount
-                        $amount_left = floor($discountRule->conditon_value - $total);
-                        if($amount_left > 0 && $discountRule->conditon_value > $total){
-                            $amount_need_toadd_for_dis = "Add more <b class='highlight_discount'> $amount_left ৳</b> and get <b class='highlight_discount'> $discountRule->discount_amount ৳</b> discount";
-                            session()->forget('total_rules_discount', $total_rules_discount);
-                        }else{
-                            $amount_need_toadd_for_dis = "You get $discountRule->discount_amount ৳ discount on $total ৳";
-                            $total_rules_discount = $discountRule->discount_amount;
-                            session()->put('total_rules_discount', $total_rules_discount);
-                            break 2;
-                        }
-                    }
-                    break;
-                  case 3: // Percent discount
-                    if ($discountRule->condition_key == 1) { //Total Amount
-                        $amount_left = $discountRule->conditon_value - $total;
+    $amount_need_toadd_for_dis = '';
+    $selected_rule = null;
 
-                        if($amount_left > 0 && $discountRule->conditon_value > $total){
-                            $amount_need_toadd_for_dis = "Add more <b class='highlight_discount'> $amount_left ৳</b> to get <b class='highlight_discount'> $discountRule->discount_amount %</b> discount";
-                            session()->forget('total_rules_discount');
-                        }else{
-                            $amount_need_toadd_for_dis = "You got $discountRule->discount_amount % discount on $total ৳";
-                            $total_rules_discount = floor(($discountRule->discount_amount / 100) * $total );
-                            session()->put('total_rules_discount', $total_rules_discount);
-                            break 2;
-                        }
-                    }
-                  break;
+    foreach ($discountRules as $discountRule) {
+        switch ($discountRule['type']) {
+            case 2: // Flat discount
+                if ($discountRule['condition_key'] == 1 && $discountRule['conditon_oprator'] == '>' && $discountRule['conditon_value'] <= $total) { // Total Amount
+                    $selected_rule = $discountRule;
                 }
-            }
+                break;
+            case 3: // Percent discount
+                if ($discountRule['condition_key'] == 1 && $discountRule['conditon_oprator'] == '>' && $discountRule['conditon_value'] <= $total) { // Total Amount
+                    $selected_rule = $discountRule;
+                }
+                break;
         }
-    @endphp
+    }
+
+    if ($selected_rule) {
+        switch ($selected_rule['type']) {
+            case 2: // Flat discount
+                $total_rules_discount = $selected_rule['discount_amount'];
+                $amount_need_toadd_for_dis = "You get {$selected_rule['discount_amount']} ৳ discount on $total ৳";
+                break;
+            case 3: // Percent discount
+                $total_rules_discount = floor(($selected_rule['discount_amount'] / 100) * $total);
+                $amount_need_toadd_for_dis = "You got {$selected_rule['discount_amount']} % discount on $total ৳";
+                break;
+        }
+    }
+@endphp
     <div class="cart-s-offer-wrap">
         <p>{!! $amount_need_toadd_for_dis !!}</p>
         <div class="combar" width="50%"></div>
