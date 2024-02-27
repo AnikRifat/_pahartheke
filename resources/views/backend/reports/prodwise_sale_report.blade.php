@@ -47,8 +47,8 @@
                                 <th>Selling Date</th>
                                 <th width="30%">Product Name</th>
                                 <th>Unit Price</th>
-                                <th>In House Order Quantity <br /> (Product unit like PCS, KG)</th>
-                                <th>Website Order Quantity <br /> (Product unit like PCS, KG)</th>
+                                {{-- <th>In House Order Quantity <br /> (Product unit like PCS, KG)</th> --}}
+                                {{-- <th>Website Order Quantity <br /> (Product unit like PCS, KG)</th> --}}
                                 <th>Total Sales Quantity <br /> (Product unit like PCS, KG)</th>
                                 <th>Discount</th>
                                 <th>Total Sales Amount</th>
@@ -60,7 +60,7 @@
                                     <td>{{ date('d M Y', strtotime($sale->updated_at)) }}</td>
                                     <td> <span>{{ $sale->name }}</span> </td>
                                     <td>{{ format_price($sale->unit_price) }}</td>
-                                    <td>
+                                    {{-- <td>
                                         {{ $sale->total_pos_quantity }}
                                         @if (is_numeric($sale->unit))
                                             (Unit not set)
@@ -75,9 +75,9 @@
                                         @else
                                             ({{ $sale->unit }})
                                         @endif
-                                    </td>
+                                    </td> --}}
                                     <td>
-                                        {{ $sale->total_sale_quantity }}
+                                        {{ $sale->quantity }}
                                         @if (is_numeric($sale->unit))
                                             (Unit not set)
                                         @else
@@ -92,7 +92,7 @@
                                         @endif
                                     </td>
 
-                                    <td>{{ format_price($sale->total_order_amount) }}</td>
+                                    <td>{{ format_price($sale->unit_price * $sale->quantity) }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

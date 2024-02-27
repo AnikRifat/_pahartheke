@@ -22,7 +22,6 @@ class ReportController extends Controller
 {
     public function sale_report(Request $request)
     {
-        // dd($request->date);
         $date = $request->date;
         $net = 0;
         $profit = 0;
@@ -63,14 +62,13 @@ class ReportController extends Controller
     {
         $query = OrderDetail::join('products', 'order_details.product_id', '=', 'products.id')
             ->join('orders', 'order_details.order_id', '=', 'orders.id')
-            ->select('products.id', 'products.name', 'order_details.discount', 'order_details.discount_percent', 'order_details.discount_type', 'products.unit_price', 'order_details.pos', 'products.slug', 'products.unit', 'orders.updated_at');
-
-        $query->whereIn('order_details.delivery_status', ['on_delivery']);
-
+            ->select('products.id', 'products.name', 'order_details.discount', 'order_details.discount_percent', 'order_details.discount_type', 'products.unit_price', 'order_details.pos','order_details.quantity', 'products.slug', 'products.unit', 'orders.updated_at');
+            $query->orderBy('order_details.updated_at', 'desc');
+        $query->whereIn('delivery_status', ['on_delivery','delivered','confirmed']);
 
         if ($request->date && !is_null($request->date)) {
-            $query->whereDate('order_details.updated_at', '>=', date('Y-m-d', strtotime(explode(" to ", $request->date)[0])))
-                ->whereDate('order_details.updated_at', '<=', date('Y-m-d', strtotime(explode(" to ", $request->date)[1])));
+            $query->whereDate('updated_at', '>=', date('Y-m-d', strtotime(explode(" to ", $request->date)[0])))
+                ->whereDate('updated_at', '<=', date('Y-m-d', strtotime(explode(" to ", $request->date)[1])));
         }
 
 
@@ -78,13 +76,13 @@ class ReportController extends Controller
             $query->where('products.id', $request->product_id);
         }
 
-        $query->selectRaw('SUM(order_details.price) as total_order_amount');
-        $query->selectRaw('SUM(order_details.quantity) as total_sale_quantity');
-        $query->selectRaw('SUM(CASE WHEN order_details.pos = 1 THEN order_details.quantity ELSE 0 END) as total_pos_quantity');
-        $query->selectRaw('SUM(CASE WHEN order_details.pos = 0 THEN order_details.quantity ELSE 0 END) as total_web_quantity');
-
-        $query->groupBy('products.id');
-        $query->orderBy('order_details.updated_at', 'desc');
+        //  $query->selectRaw('SUM(price) as total_order_amount');
+        //  $query->selectRaw('SUM(quantity) as total_sale_quantity');
+   
+        //  $query->selectRaw('SUM(CASE WHEN order_details.pos = 1 THEN order_details.quantity ELSE 0 END) as total_pos_quantity');
+        //  $query->selectRaw('SUM(CASE WHEN order_details.pos = 0 THEN order_details.quantity ELSE 0 END) as total_web_quantity');
+        //  $query->groupBy('id');
+        // dd($query->pluck('updated_at'));
 
         $sales = $query->paginate(30);
         if ($request->date && !is_null($request->date)) {
@@ -96,7 +94,7 @@ class ReportController extends Controller
             return Excel::download(new ProdWiseSalesReportExport($query->get()), 'product_wise_sales.xlsx');
         }
         $all_products = Product::orderBy('updated_at', 'desc')->get(['id', 'name']);
-        // dd($sales->toArray());
+
         return view('backend.reports.prodwise_sale_report', compact('sales', 'all_products'));
     }
     public function stock_report(Request $request)
