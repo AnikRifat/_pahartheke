@@ -58,8 +58,8 @@
                             @foreach ($sales as $sale)
                                 <tr>
                                     <td>{{ date('d M Y', strtotime($sale->updated_at)) }}</td>
-                                    <td> <span>{{ $sale->name }}</span> </td>
-                                    <td>{{ format_price($sale->unit_price) }}</td>
+                                    <td> <span>{{ $sale->product?$sale->product->name : ' '  }}</span> </td>
+                                    <td>{{ format_price($sale->price?$sale->price : 0 ) }}</td>
                                     {{-- <td>
                                         {{ $sale->total_pos_quantity }}
                                         @if (is_numeric($sale->unit))
@@ -81,18 +81,18 @@
                                         @if (is_numeric($sale->unit))
                                             (Unit not set)
                                         @else
-                                            ({{ $sale->unit }})
+                                        ({{ $sale->product?$sale->product->unit : ' '  }})
                                         @endif
                                     </td>
                                     <td>
                                         @if ($sale->discount_type == 'percent')
-                                            {{ format_price(($sale->total_order_amount / 100) * $sale->discount) }}
+                                            {{ format_price(($sale->price / 100) * $sale->discount) }}
                                         @else
                                             {{ format_price($sale->discount) }}
                                         @endif
                                     </td>
 
-                                    <td>{{ format_price($sale->unit_price * $sale->quantity) }}</td>
+                                    <td>{{ format_price($sale->price * $sale->quantity) }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

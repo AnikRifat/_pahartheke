@@ -60,20 +60,17 @@ class ReportController extends Controller
 
     public function prodwise_sale_report(Request $request)
     {
-        $query = OrderDetail::join('products', 'order_details.product_id', '=', 'products.id')
-            ->join('orders', 'order_details.order_id', '=', 'orders.id')
-            ->select('products.id', 'products.name', 'order_details.discount', 'order_details.discount_percent', 'order_details.discount_type', 'products.unit_price', 'order_details.pos','order_details.quantity', 'products.slug', 'products.unit', 'orders.updated_at');
-            $query->orderBy('order_details.updated_at', 'desc');
-        $query->whereIn('delivery_status', ['on_delivery','delivered','confirmed']);
-
-        if ($request->date && !is_null($request->date)) {
-            $query->whereDate('updated_at', '>=', date('Y-m-d', strtotime(explode(" to ", $request->date)[0])))
-                ->whereDate('updated_at', '<=', date('Y-m-d', strtotime(explode(" to ", $request->date)[1])));
-        }
-
+        
+        $query = OrderDetail::with('product')
+        ->whereIn('delivery_status', ['on_delivery', 'delivered', 'confirmed'])->orderBy('updated_at','desc');
+    
+    if ($request->date && !is_null($request->date)) {
+        $query->whereDate('updated_at', '>=', date('Y-m-d', strtotime(explode(" to ", $request->date)[0])))
+              ->whereDate('updated_at', '<=', date('Y-m-d', strtotime(explode(" to ", $request->date)[1])));
+    }
 
         if ($request->product_id && !is_null($request->product_id)) {
-            $query->where('products.id', $request->product_id);
+            $query->where('product_id', $request->product_id);
         }
 
         //  $query->selectRaw('SUM(price) as total_order_amount');
@@ -85,10 +82,10 @@ class ReportController extends Controller
         // dd($query->pluck('updated_at'));
 
         $sales = $query->paginate(30);
-        if ($request->date && !is_null($request->date)) {
-            $sales->appends(['date' => $request->date]);
-            $sales->setPath(URL::current());
-        }
+        // if ($request->date && !is_null($request->date)) {
+        //     $sales->appends(['date' => $request->date]);
+        //     $sales->setPath(URL::current());
+        // }
 
         if ($request->export) {
             return Excel::download(new ProdWiseSalesReportExport($query->get()), 'product_wise_sales.xlsx');
