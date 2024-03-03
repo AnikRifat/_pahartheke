@@ -61,8 +61,9 @@ class ReportController extends Controller
     public function prodwise_sale_report(Request $request)
     {
         
-        $query = OrderDetail::with('product')
-        ->whereIn('delivery_status', ['on_delivery', 'delivered', 'confirmed'])->orderBy('updated_at','desc');
+        $query = OrderDetail::with('product')->whereHas('order', function ($query) {
+            $query->where('cancelled', 0);
+        })->orderBy('updated_at','desc');
     
     if ($request->date && !is_null($request->date)) {
         $query->whereDate('updated_at', '>=', date('Y-m-d', strtotime(explode(" to ", $request->date)[0])))
