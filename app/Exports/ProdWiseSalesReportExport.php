@@ -12,6 +12,7 @@ class ProdWiseSalesReportExport implements FromView
      *
      * @return void
      */
+    protected $orders;
     public function __construct($orders)
     {
         $this->orders = $orders;

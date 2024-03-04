@@ -60,36 +60,69 @@ class ReportController extends Controller
 
     public function prodwise_sale_report(Request $request)
     {
-        
-        $query = OrderDetail::with('product')->whereHas('order', function ($query) {
-            $query->where('cancelled', 0);
-        })->orderBy('updated_at','desc');
-    
-    if ($request->date && !is_null($request->date)) {
-        $query->whereDate('updated_at', '>=', date('Y-m-d', strtotime(explode(" to ", $request->date)[0])))
-              ->whereDate('updated_at', '<=', date('Y-m-d', strtotime(explode(" to ", $request->date)[1])));
-    }
+        // Retrieve order details with products where products are not null
+        $orderDetails = OrderDetail::with('product')
+            ->whereHas('order', function ($query) {
+                $query->where('cancelled', 0)
+                ->where('payment_status', 'paid');
+            });
 
         if ($request->product_id && !is_null($request->product_id)) {
-            $query->where('product_id', $request->product_id);
+            $orderDetails->where('product_id',$request->product_id);
+        }
+        if ($request->date && !is_null($request->date)) {
+            $date=$request->date ;
+            $orderDetails->whereHas('order', function ($query) use ($date){
+            $query->whereDate('updated_at', '>=', date('Y-m-d', strtotime(explode(" to ",$date)[0])))
+                ->whereDate('updated_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
+            });
+        }
+        // Initialize arrays to store total quantity and total price sale for each product
+        $sales = [];
+
+        // Calculate total quantity and total price sale for each product
+        foreach ($orderDetails->get() as $orderDetail) {
+            if ($orderDetail->product) {
+                $productId = $orderDetail->product->id;
+                // Calculate total quantity and total price sale for the product
+                $totalQuantity = $orderDetail->quantity;
+                $totalPriceSale =  $orderDetail->price - $orderDetail->discount;
+
+                // Update the product totals array
+                if (isset($sales[$productId])) {
+                    $sales[$productId]['total_quantity'] += $totalQuantity;
+                    $sales[$productId]['total_price_sale'] += $totalPriceSale;
+                    if ($orderDetail->pos == 1) {
+                        $sales[$productId]['pos'] += $totalPriceSale;
+                    } else {
+                        $sales[$productId]['web'] += $totalPriceSale;
+                    }
+                } else {
+                    if ($orderDetail->pos == 1) {
+                        $sales[$productId] = [
+                            'product_name' => $orderDetail->product->name,
+                            'total_quantity' => $totalQuantity,
+                            'total_price_sale' => $totalPriceSale,
+                            'pos' => $totalPriceSale,
+                            'web' => 0,
+
+                        ];
+                    } else {
+                        $sales[$productId] = [
+                            'product_name' => $orderDetail->product->name,
+                            'total_quantity' => $totalQuantity,
+                            'total_price_sale' => $totalPriceSale,
+                            'web' => $totalPriceSale,
+                            'pos' => 0,
+
+                        ];
+                    }
+                }
+            }
         }
 
-        //  $query->selectRaw('SUM(price) as total_order_amount');
-        //  $query->selectRaw('SUM(quantity) as total_sale_quantity');
-   
-        //  $query->selectRaw('SUM(CASE WHEN order_details.pos = 1 THEN order_details.quantity ELSE 0 END) as total_pos_quantity');
-        //  $query->selectRaw('SUM(CASE WHEN order_details.pos = 0 THEN order_details.quantity ELSE 0 END) as total_web_quantity');
-        //  $query->groupBy('id');
-        // dd($query->pluck('updated_at'));
-
-        $sales = $query->paginate(30);
-        // if ($request->date && !is_null($request->date)) {
-        //     $sales->appends(['date' => $request->date]);
-        //     $sales->setPath(URL::current());
-        // }
-
         if ($request->export) {
-            return Excel::download(new ProdWiseSalesReportExport($query->get()), 'product_wise_sales.xlsx');
+            return Excel::download(new ProdWiseSalesReportExport($sales), 'product_wise_sales.xlsx');
         }
         $all_products = Product::orderBy('updated_at', 'desc')->get(['id', 'name']);
 

@@ -44,62 +44,33 @@
                     <table class="table table-bordered aiz-table mb-0">
                         <thead>
                             <tr>
-                                <th>Selling Date</th>
+                                {{-- <th>Selling Date</th> --}}
                                 <th width="30%">Product Name</th>
-                                <th>Unit Price</th>
-                                {{-- <th>In House Order Quantity <br /> (Product unit like PCS, KG)</th> --}}
-                                {{-- <th>Website Order Quantity <br /> (Product unit like PCS, KG)</th> --}}
-                                <th>Total Sales Quantity <br /> (Product unit like PCS, KG)</th>
-                                <th>Discount</th>
-                                <th>Total Sales Amount</th>
+                                {{-- <th>Unit Price</th> --}}
+                                {{-- <th>Discount</th> --}}
+                                <th>Total Sales pos</th>
+                                <th>Total Sales web</th>
+                                <th>Total </th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($sales as $sale)
-                                <tr>
-                                    <td>{{ date('d M Y', strtotime($sale->updated_at)) }}</td>
-                                    <td> <span>{{ $sale->product?$sale->product->name : ' '  }}</span> </td>
-                                    <td>{{ format_price($sale->price?$sale->price : 0 ) }}</td>
-                                    {{-- <td>
-                                        {{ $sale->total_pos_quantity }}
-                                        @if (is_numeric($sale->unit))
-                                            (Unit not set)
-                                        @else
-                                            ({{ $sale->unit }})
-                                        @endif
-                                    </td>
-                                    <td>
-                                        {{ $sale->total_web_quantity }}
-                                        @if (is_numeric($sale->unit))
-                                            (Unit not set)
-                                        @else
-                                            ({{ $sale->unit }})
-                                        @endif
-                                    </td> --}}
-                                    <td>
-                                        {{ $sale->quantity }}
-                                        @if (is_numeric($sale->unit))
-                                            (Unit not set)
-                                        @else
-                                        ({{ $sale->product?$sale->product->unit : ' '  }})
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if ($sale->discount_type == 'percent')
-                                            {{ format_price(($sale->price / 100) * $sale->discount) }}
-                                        @else
-                                            {{ format_price($sale->discount) }}
-                                        @endif
-                                    </td>
-
-                                    <td>{{ format_price($sale->price * $sale->quantity) }}</td>
-                                </tr>
+                                @if ($sale['product_name'])
+                                    <tr>
+                                        {{-- <td>{{ date('d M Y', strtotime($sale['updated_at'])) }}</td> --}}
+                                        <td>{{ $sale['product_name'] }}</td>
+                                        {{-- <td>{{ format_price($sale['unit_price']) }}</td> --}}
+                                        {{-- <td>{{ format_price($sale['discount']) }}</td> --}}
+                                        <td>{{ format_price($sale['pos']) }}</td>
+                                        <td>{{ format_price($sale['web']) }}</td>
+                                        <td>{{ format_price($sale['total_price_sale']) }}</td>
+                                    </tr>
+                                @endif
                             @endforeach
                         </tbody>
                     </table>
-                    <div class="aiz-pagination mt-4">
-                        {{ $sales->links() }}
-                    </div>
+
+
                 </div>
             </div>
         </div>
