@@ -86,12 +86,14 @@ class ReportController extends Controller
                 $productId = $orderDetail->product->id;
                 // Calculate total quantity and total price sale for the product
                 $totalQuantity = $orderDetail->quantity;
+                $totalDiscount = $orderDetail->discount;
                 $totalPriceSale =  $orderDetail->price - $orderDetail->discount;
 
                 // Update the product totals array
                 if (isset($sales[$productId])) {
                     $sales[$productId]['total_quantity'] += $totalQuantity;
                     $sales[$productId]['total_price_sale'] += $totalPriceSale;
+                    $sales[$productId]['total_discount'] += $totalDiscount;
                     if ($orderDetail->pos == 1) {
                         $sales[$productId]['pos'] += $totalPriceSale;
                     } else {
@@ -103,6 +105,7 @@ class ReportController extends Controller
                             'product_name' => $orderDetail->product->name,
                             'total_quantity' => $totalQuantity,
                             'total_price_sale' => $totalPriceSale,
+                            'total_discount' => $totalDiscount,
                             'pos' => $totalPriceSale,
                             'web' => 0,
 
@@ -112,6 +115,7 @@ class ReportController extends Controller
                             'product_name' => $orderDetail->product->name,
                             'total_quantity' => $totalQuantity,
                             'total_price_sale' => $totalPriceSale,
+                            'total_discount' => $totalDiscount,
                             'web' => $totalPriceSale,
                             'pos' => 0,
 

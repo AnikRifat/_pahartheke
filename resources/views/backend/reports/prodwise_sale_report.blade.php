@@ -50,6 +50,7 @@
                                 {{-- <th>Discount</th> --}}
                                 <th>Total Sales pos</th>
                                 <th>Total Sales web</th>
+                                {{-- <th>Total Discount</th> --}}
                                 <th>Total </th>
                             </tr>
                         </thead>
@@ -63,6 +64,7 @@
                                         {{-- <td>{{ format_price($sale['discount']) }}</td> --}}
                                         <td>{{ format_price($sale['pos']) }}</td>
                                         <td>{{ format_price($sale['web']) }}</td>
+                                        {{-- <td>{{ format_price($sale['total_discount']) }}</td> --}}
                                         <td>{{ format_price($sale['total_price_sale']) }}</td>
                                     </tr>
                                 @endif
