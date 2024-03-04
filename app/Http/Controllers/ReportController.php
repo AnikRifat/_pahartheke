@@ -88,7 +88,7 @@ class ReportController extends Controller
                 $totalQuantity = $orderDetail->quantity;
                 $totalDiscount = $orderDetail->discount;
                 $totalPriceSale =  $orderDetail->price - $orderDetail->discount;
-
+                $productUnit= $orderDetail->product->unit;
                 // Update the product totals array
                 if (isset($sales[$productId])) {
                     $sales[$productId]['total_quantity'] += $totalQuantity;
@@ -104,6 +104,7 @@ class ReportController extends Controller
                         $sales[$productId] = [
                             'product_name' => $orderDetail->product->name,
                             'total_quantity' => $totalQuantity,
+                            'unit' => $productUnit,
                             'total_price_sale' => $totalPriceSale,
                             'total_discount' => $totalDiscount,
                             'pos' => $totalPriceSale,
@@ -114,6 +115,7 @@ class ReportController extends Controller
                         $sales[$productId] = [
                             'product_name' => $orderDetail->product->name,
                             'total_quantity' => $totalQuantity,
+                            'unit' => $productUnit,
                             'total_price_sale' => $totalPriceSale,
                             'total_discount' => $totalDiscount,
                             'web' => $totalPriceSale,
