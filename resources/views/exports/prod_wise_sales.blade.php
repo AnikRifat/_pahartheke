@@ -4,7 +4,7 @@
             {{-- <th>Selling Date</th> --}}
             <th width="30%">Product Name</th>
             {{-- <th>Unit Price</th> --}}
-            {{-- <th>Discount</th> --}}
+            <th>Quantity</th>
             <th>Total Sales pos</th>
             <th>Total Sales web</th>
             {{-- <th>Total Discount</th> --}}
@@ -18,7 +18,7 @@
                     {{-- <td>{{ date('d M Y', strtotime($order['updated_at'])) }}</td> --}}
                     <td>{{ $order['product_name'] }}</td>
                     {{-- <td>{{ format_price($order['unit_price']) }}</td> --}}
-                    {{-- <td>{{ format_price($order['discount']) }}</td> --}}
+                    <td>{{ $order['total_quantity'] }} ({{ $order['unit'] }}) </td>
                     <td>{{ format_price($order['pos']) }}</td>
                     <td>{{ format_price($order['web']) }}</td>
                     {{-- <td>{{ format_price($order['total_discount']) }}</td> --}}
