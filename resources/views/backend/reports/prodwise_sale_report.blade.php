@@ -47,7 +47,7 @@
                                 {{-- <th>Selling Date</th> --}}
                                 <th width="30%">Product Name</th>
                                 {{-- <th>Unit Price</th> --}}
-                                {{-- <th>Discount</th> --}}
+                                <th>Quantity</th>
                                 <th>Total Sales pos</th>
                                 <th>Total Sales web</th>
                                 {{-- <th>Total Discount</th> --}}
@@ -61,7 +61,7 @@
                                         {{-- <td>{{ date('d M Y', strtotime($sale['updated_at'])) }}</td> --}}
                                         <td>{{ $sale['product_name'] }}</td>
                                         {{-- <td>{{ format_price($sale['unit_price']) }}</td> --}}
-                                        {{-- <td>{{ format_price($sale['discount']) }}</td> --}}
+                                        <td>{{ $sale['total_quantity'] }} </td>
                                         <td>{{ format_price($sale['pos']) }}</td>
                                         <td>{{ format_price($sale['web']) }}</td>
                                         {{-- <td>{{ format_price($sale['total_discount']) }}</td> --}}
