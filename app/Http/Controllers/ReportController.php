@@ -83,6 +83,9 @@ class ReportController extends Controller
         // Calculate total quantity and total price sale for each product
         foreach ($orderDetails->get() as $orderDetail) {
             if ($orderDetail->product) {
+
+
+
                 $productId = $orderDetail->product->id;
                 // Calculate total quantity and total price sale for the product
                 $totalQuantity = $orderDetail->quantity;
@@ -94,24 +97,14 @@ class ReportController extends Controller
                     $sales[$productId]['total_quantity'] += $totalQuantity;
                     $sales[$productId]['total_price_sale'] += $totalPriceSale;
                     $sales[$productId]['total_discount'] += $totalDiscount;
-                    if ($orderDetail->pos == 1) {
-                        $sales[$productId]['pos'] += $totalPriceSale;
-                    } else {
+                    if ($orderDetail->pos == 0 && $orderDetail->delivery_status == 'delivered') {
                         $sales[$productId]['web'] += $totalPriceSale;
+                    } else {
+                        $sales[$productId]['pos'] += $totalPriceSale;
+
                     }
                 } else {
-                    if ($orderDetail->pos == 1) {
-                        $sales[$productId] = [
-                            'product_name' => $orderDetail->product->name,
-                            'total_quantity' => $totalQuantity,
-                            'unit' => $productUnit,
-                            'total_price_sale' => $totalPriceSale,
-                            'total_discount' => $totalDiscount,
-                            'pos' => $totalPriceSale,
-                            'web' => 0,
-
-                        ];
-                    } else {
+                    if ($orderDetail->pos == 0 && $orderDetail->delivery_status == 'delivered' ) {
                         $sales[$productId] = [
                             'product_name' => $orderDetail->product->name,
                             'total_quantity' => $totalQuantity,
@@ -120,6 +113,18 @@ class ReportController extends Controller
                             'total_discount' => $totalDiscount,
                             'web' => $totalPriceSale,
                             'pos' => 0,
+
+                        ];
+                        
+                    } else {
+                        $sales[$productId] = [
+                            'product_name' => $orderDetail->product->name,
+                            'total_quantity' => $totalQuantity,
+                            'unit' => $productUnit,
+                            'total_price_sale' => $totalPriceSale,
+                            'total_discount' => $totalDiscount,
+                            'pos' => $totalPriceSale,
+                            'web' => 0,
 
                         ];
                     }
