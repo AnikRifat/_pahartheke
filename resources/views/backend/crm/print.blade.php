@@ -25,7 +25,7 @@
 
         th,
         td {
-            border: 1px solid #ddd;
+            border: 1px solid #000;
             padding: 8px;
             text-align: left;
             word-wrap: break-word;
@@ -99,7 +99,7 @@
                     <td class="blank-field"></td>
                     <td></td>
 
-                    
+
 
                 </tr>
                 <!-- Add more blank rows if needed -->
