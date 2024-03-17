@@ -95,11 +95,12 @@ class OrderController extends Controller
             'discounts' => single_price($orders->sum('total_discount')),
         ];
         if ($request->has('export')) {
-            $saleData = $orders->latest()->get();
+            $orders = $orders->latest()->get();
+            return view('backend.sales.all_orders.print', compact('data','orders'));
 // dd($saleData);
             // $pdf = PDF::loadView('exports.sales', compact('orders'));
             //  return $pdf->download('sales-' . $dateName . '.pdf');
-             return view('exports.sales', compact('saleData','data'));
+            //  return view('exports.sales', compact('saleData','data'));
         }
 
         $orders = $date ?$orders->get() :$orders->paginate(15);
