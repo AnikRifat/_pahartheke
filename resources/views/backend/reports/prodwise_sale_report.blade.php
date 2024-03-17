@@ -41,34 +41,61 @@
                     </form>
                 </div>
                 <div class="card-body">
+
+
+
                     <table class="table table-bordered aiz-table mb-0">
                         <thead>
                             <tr>
-                                {{-- <th>Selling Date</th> --}}
                                 <th width="30%">Product Name</th>
-                                {{-- <th>Unit Price</th> --}}
                                 <th>Quantity</th>
                                 <th>Total Sales pos</th>
                                 <th>Total Sales web</th>
-                                {{-- <th>Total Discount</th> --}}
-                                <th>Total </th>
+                                <th>Total</th>
                             </tr>
                         </thead>
                         <tbody>
+                            @php
+                                $totalPosSales = 0;
+                                $totalWebSales = 0;
+                                $totalSales = 0;
+                            @endphp
                             @foreach ($sales as $sale)
                                 @if ($sale['product_name'])
+                                    @php
+                                        $totalPosSales += $sale['pos'];
+                                        $totalWebSales += $sale['web'];
+                                        $totalSales += $sale['total_price_sale'];
+                                    @endphp
                                     <tr>
-                                        {{-- <td>{{ date('d M Y', strtotime($sale['updated_at'])) }}</td> --}}
                                         <td>{{ $sale['product_name'] }}</td>
-                                        {{-- <td>{{ format_price($sale['unit_price']) }}</td> --}}
-                                        <td>{{ $sale['total_quantity'] }} ({{ $sale['unit'] }}) </td>
+                                        <td>{{ $sale['total_quantity'] }} ({{ $sale['unit'] }})</td>
                                         <td>{{ format_price($sale['pos']) }}</td>
                                         <td>{{ format_price($sale['web']) }}</td>
-                                        {{-- <td>{{ format_price($sale['total_discount']) }}</td> --}}
                                         <td>{{ format_price($sale['total_price_sale']) }}</td>
                                     </tr>
                                 @endif
                             @endforeach
+                     
+                        </tbody>
+                    </table>
+
+                    <table class="table table-bordered aiz-table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Total Sales pos</th>
+                                <th>Total Sales web</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td><strong>{{ format_price($totalPosSales) }}</strong></td>
+                                <td><strong>{{ format_price($totalWebSales) }}</strong></td>
+                                <td><strong>{{ format_price($totalSales) }}</strong></td>
+                            </tr>
+
                         </tbody>
                     </table>
 

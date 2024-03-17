@@ -72,6 +72,8 @@ class OrderController extends Controller
     // All Orders
     public function all_orders(Request $request)
     {
+        $payment_status = null;
+        $delivery_status = null;
         $date = $request->date;
         $sort_search = null;
         $orders = Order::orderBy('code', 'desc');
@@ -83,6 +85,19 @@ class OrderController extends Controller
             $orders = $orders->whereDate('created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->whereDate('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
 
 
+        }
+
+        if ($request->payment_type != null) {
+            $orders = $orders->whereHas('orderDetails', function ($query) use ($request){
+                $query->where('payment_status', $request->payment_type);
+            });
+            $payment_status = $request->payment_type;
+        }
+        if ($request->delivery_status != null) {
+            $orders = $orders->whereHas('orderDetails', function ($query) use ($request){
+                $query->where('delivery_status', $request->delivery_status);
+            });
+            $delivery_status = $request->delivery_status;
         }
 
         $dateName = $date ? $date : Carbon::now();
@@ -105,7 +120,7 @@ class OrderController extends Controller
 
         $orders = $date ?$orders->get() :$orders->paginate(15);
         $paginate = $date ?false :true;
-        return view('backend.sales.all_orders.index', compact('data','orders', 'sort_search', 'date','paginate'));
+        return view('backend.sales.all_orders.index', compact('data','orders', 'sort_search', 'date','paginate','delivery_status','payment_status'));
     }
 
     public function all_orders_show($id)

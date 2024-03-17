@@ -31,7 +31,10 @@ class ReportController extends Controller
         $shipping = 0;
         $coupon = 0;
 
-        $orders = Order::query()->where('payment_status', 'paid')->where('cancelled', 0);
+        $orders = Order::query()->whereHas('orderDetails', function ($query) {
+                $query->where('cancelled', 0)
+                ->where('delivery_status', 'delivered');
+            })->where('cancelled', 0);
         if ($date != null) {
             $orders = $orders->whereDate('created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->whereDate('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
         }
@@ -42,7 +45,7 @@ class ReportController extends Controller
             $coupon += $order->coupon_discount;
             if ($order->orderDetails != null) {
                 $items += $order->orderDetails->count();
-                $shipping += $order->orderDetails->sum('shipping_cost');
+                $shipping += $order->orderDetails->first()->shipping_cost;
                 $tax += $order->orderDetails->sum('tax');
                 $profit += $order->orderDetails->sum('profit');
             }
@@ -64,7 +67,7 @@ class ReportController extends Controller
         $orderDetails = OrderDetail::with('product')
             ->whereHas('order', function ($query) {
                 $query->where('cancelled', 0)
-                ->where('payment_status', 'paid');
+                ->where('delivery_status', 'delivered');
             });
 
         if ($request->product_id && !is_null($request->product_id)) {

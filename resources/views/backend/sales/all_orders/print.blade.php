@@ -87,6 +87,7 @@ $refund_request_addon = \App\Addon::where('unique_identifier', 'refund_request')
                 <th data-breakpoints="md">{{ translate('Customer Lifetime Orders') }}</th>
                 <th data-breakpoints="md">{{ translate('Amount') }}</th>
                 <th data-breakpoints="md">{{ translate(discount_col_name(1)) }}</th>
+                <th data-breakpoints="md">{{ translate('shipping Charge') }}</th>
                 <th data-breakpoints="md">{{ translate('Delivery Status') }}</th>
                 <th data-breakpoints="md">{{ translate('Payment Status') }}</th>
                 @if ($refund_request_addon != null && $refund_request_addon->activated == 1)
@@ -134,9 +135,9 @@ $refund_request_addon = \App\Addon::where('unique_identifier', 'refund_request')
                 <td>
                     {{ single_price($order->total_discount) }}
                 </td>
-                {{-- <td>
-                    {{ single_price($order->shipping_cost) }}
-                </td> --}}
+                <td>
+                    {{ single_price($order->orderDetails->first()->shipping_cost) }}
+                </td>
                 <td>
                     @php
                         $status = optional($order->orderDetails->first())->delivery_status;
