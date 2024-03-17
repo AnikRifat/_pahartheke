@@ -97,7 +97,7 @@ $refund_request_addon = \App\Addon::where('unique_identifier', 'refund_request')
         <tbody>
 
             @foreach ($orders as $key => $order)
-            {{dd($order)}}
+            {{-- {{dd($order)}} --}}
             <tr>
                 <td>
                     {{ $key + 1 }}
