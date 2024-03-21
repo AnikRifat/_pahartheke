@@ -243,7 +243,7 @@ class OrderController extends Controller
             $orders = $orders->where('shipping_address', 'like', '%' . $sort_search . '%');
         }
         if ($date != null) {
-            $orders = $orders->whereDate('orders.created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->whereDate('orders.created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
+            $orders = $orders->whereDate('orders.updated_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->whereDate('orders.updated_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
         }
 
         $orders = $orders->paginate(15);
@@ -312,7 +312,7 @@ class OrderController extends Controller
             $orders = $orders->where('code', 'like', '%' . $sort_search . '%');
         }
         if ($date != null) {
-            $orders = $orders->whereDate('orders.created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->whereDate('orders.created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
+            $orders = $orders->whereDate('orders.updated_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->whereDate('orders.updated_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
         }
 
         $orders = $orders->paginate(15);
@@ -356,7 +356,7 @@ class OrderController extends Controller
             $orders = $orders->where('code', 'like', '%' . $sort_search . '%');
         }
         if ($date != null) {
-            $orders = $orders->whereDate('orders.created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->whereDate('orders.created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
+            $orders = $orders->whereDate('orders.updated_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->whereDate('orders.updated_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
         }
 
         $orders = $orders->paginate(15);
@@ -393,7 +393,7 @@ class OrderController extends Controller
                 $orders = $orders->where('code', 'like', '%' . $sort_search . '%');
             }
             if ($date != null) {
-                $orders = $orders->whereDate('orders.created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->whereDate('orders.created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
+                $orders = $orders->whereDate('orders.updated_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->whereDate('orders.updated_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
             }
 
             $orders = $orders->paginate(15);
@@ -413,7 +413,7 @@ class OrderController extends Controller
                 $orders = $orders->where('code', 'like', '%' . $sort_search . '%');
             }
             if ($date != null) {
-                $orders = $orders->whereDate('orders.created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->whereDate('orders.created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
+                $orders = $orders->whereDate('orders.updated_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->whereDate('orders.updated_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
             }
 
             $orders = $orders->paginate(15);
