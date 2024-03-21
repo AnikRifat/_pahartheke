@@ -36,7 +36,7 @@ class ReportController extends Controller
                 ->where('delivery_status', 'delivered');
             })->where('cancelled', 0);
         if ($date != null) {
-            $orders = $orders->whereDate('created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->whereDate('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
+            $orders = $orders->whereDate('updated_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->whereDate('updated_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
         }
 
         foreach ($orders->with('orderDetails')->get() as $key => $order) {
