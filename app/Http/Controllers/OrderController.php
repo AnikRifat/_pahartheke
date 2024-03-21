@@ -82,7 +82,7 @@ class OrderController extends Controller
             $orders = $orders->where('shipping_address', 'like', '%' . $sort_search . '%');
         }
         if ($date != null) {
-            $orders = $orders->whereDate('created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->whereDate('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
+            $orders = $orders->whereDate('updated_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->whereDate('updated_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
 
 
         }
