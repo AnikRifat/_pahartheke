@@ -106,7 +106,7 @@ class OrderController extends Controller
         $data = [
             'customer' => $orders->pluck('user_id')->unique()->count(),
             'orders' => $orders->count(),
-            'purchases' => single_price($orders->sum('grand_total') - $orders->sum('total_discount')),
+            'purchases' => single_price($orders->sum('grand_total')),
             'discounts' => single_price($orders->sum('total_discount')),
         ];
         if ($request->has('export')) {
