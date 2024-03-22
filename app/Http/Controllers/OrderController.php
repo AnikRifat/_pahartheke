@@ -77,51 +77,58 @@ class OrderController extends Controller
         $date = $request->date;
         $sort_search = null;
         $orders = Order::orderBy('code', 'desc');
+    
         if ($request->has('search')) {
             $sort_search = $request->search;
             $orders = $orders->where('shipping_address', 'like', '%' . $sort_search . '%');
         }
+    
         if ($date != null) {
-            $orders = $orders->whereDate('updated_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->whereDate('updated_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
-
-
+            $orders = $orders->where(function($query) use ($date) {
+                $query->whereDate('created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))
+                      ->whereDate('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])))
+                      ->orWhere(function($query) use ($date) {
+                          $query->where('pos_order', 0)
+                                ->whereDate('updated_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))
+                                ->whereDate('updated_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
+                      });
+            });
         }
-
+    
         if ($request->payment_type != null) {
             $orders = $orders->whereHas('orderDetails', function ($query) use ($request){
                 $query->where('payment_status', $request->payment_type);
             });
             $payment_status = $request->payment_type;
         }
+    
         if ($request->delivery_status != null) {
             $orders = $orders->whereHas('orderDetails', function ($query) use ($request){
                 $query->where('delivery_status', $request->delivery_status);
             });
             $delivery_status = $request->delivery_status;
         }
-
+    
         $dateName = $date ? $date : Carbon::now();
-        
-
+    
         $data = [
             'customer' => $orders->pluck('user_id')->unique()->count(),
             'orders' => $orders->count(),
             'purchases' => single_price($orders->sum('grand_total')),
             'discounts' => single_price($orders->sum('total_discount')),
         ];
+    
         if ($request->has('export')) {
             $orders = $orders->latest()->get();
             return view('backend.sales.all_orders.print', compact('data','orders'));
-// dd($saleData);
-            // $pdf = PDF::loadView('exports.sales', compact('orders'));
-            //  return $pdf->download('sales-' . $dateName . '.pdf');
-            //  return view('exports.sales', compact('saleData','data'));
         }
-
-        $orders = $date ?$orders->get() :$orders->paginate(15);
-        $paginate = $date ?false :true;
+    
+        $orders = $date ? $orders->get() : $orders->paginate(15);
+        $paginate = $date ? false : true;
         return view('backend.sales.all_orders.index', compact('data','orders', 'sort_search', 'date','paginate','delivery_status','payment_status'));
     }
+    
+    
 
     public function all_orders_show($id)
     {
