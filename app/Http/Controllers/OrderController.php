@@ -76,8 +76,8 @@ class OrderController extends Controller
         $delivery_status = null;
         $date = $request->date;
         $sort_search = null;
-        $orders = Order::orderBy('code', 'desc');
-    
+        $orders = Order::orderByRaw('CASE WHEN orders.pos_order = 1 THEN orders.created_at ELSE orders.updated_at END DESC');
+        // $orders->orderByRaw('CASE WHEN pos_order = 1 THEN  ELSE updated_at END DESC');
         if ($request->has('search')) {
             $sort_search = $request->search;
             $orders = $orders->where('shipping_address', 'like', '%' . $sort_search . '%');
@@ -94,7 +94,7 @@ class OrderController extends Controller
                       });
             });
         }
-    
+
         if ($request->payment_type != null) {
             $orders = $orders->whereHas('orderDetails', function ($query) use ($request){
                 $query->where('payment_status', $request->payment_type);

@@ -24,7 +24,7 @@
                             placeholder="{{ translate('Type Order code & hit Enter') }}">
                     </div>
                 </div>
-                <div class="col-lg-2 ml-auto">
+                {{-- <div class="col-lg-2 ml-auto">
                     <select class="form-control aiz-selectpicker" name="payment_type" id="payment_type"
                         onchange="sort_orders()">
                         <option value="">{{ translate('Filter by Payment Status') }}</option>
@@ -57,7 +57,7 @@
                             @isset($delivery_status) @if ($delivery_status == 'delivered') selected @endif @endisset>
                             {{ translate('Delivered') }}</option>
                     </select>
-                </div>
+                </div> --}}
                 <div class="col-auto">
                     <div class="form-group mb-0">
                         <button type="submit" class="btn btn-primary"value="filter"
