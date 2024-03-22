@@ -35,9 +35,17 @@ class ReportController extends Controller
                 $query->where('cancelled', 0)
                 ->where('delivery_status', 'delivered');
             })->where('cancelled', 0);
-        if ($date != null) {
-            $orders = $orders->whereDate('updated_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->whereDate('updated_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
-        }
+            if ($date != null) {
+                $orders = $orders->where(function($query) use ($date) {
+                    $query->whereDate('created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))
+                          ->whereDate('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])))
+                          ->orWhere(function($query) use ($date) {
+                              $query->where('pos_order', 0)
+                                    ->whereDate('updated_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))
+                                    ->whereDate('updated_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
+                          });
+                });
+            }
 
         foreach ($orders->with('orderDetails')->get() as $key => $order) {
             $net += $order->grand_total;
@@ -74,12 +82,20 @@ class ReportController extends Controller
             $orderDetails->where('product_id',$request->product_id);
         }
         if ($request->date && !is_null($request->date)) {
-            $date=$request->date ;
-            $orderDetails->whereHas('order', function ($query) use ($date){
-            $query->whereDate('updated_at', '>=', date('Y-m-d', strtotime(explode(" to ",$date)[0])))
-                ->whereDate('updated_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
+            $date = $request->date;
+            $orderDetails->whereHas('order', function ($query) use ($date) {
+                $query->where(function ($query) use ($date) {
+                    $query->where('pos', 1)
+                          ->whereDate('created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))
+                          ->whereDate('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
+                })->orWhere(function ($query) use ($date) {
+                    $query->where('pos', 0)
+                          ->whereDate('updated_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))
+                          ->whereDate('updated_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
+                });
             });
         }
+        
         // Initialize arrays to store total quantity and total price sale for each product
         $sales = [];
 
