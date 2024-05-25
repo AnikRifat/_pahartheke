@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $video_link
  * @property string|null $tags
  * @property string|null $description
+ * @property string|null $short_description
  * @property float $unit_price
  * @property float $purchase_price
  * @property string|null $choice_options
@@ -61,6 +62,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereCurrentStock($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereShortDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereDiscount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereDiscountType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereFeatured($value)

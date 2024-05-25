@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
  *
  * @property int $id
  * @property string $name
+ * @property string $msg
  * @property string|null $banner
  * @property string|null $icon
  * @property int $featured
@@ -26,6 +27,7 @@ use Illuminate\Database\Eloquent\Builder;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Category whereIcon($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Category whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Category whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Category whereMsg($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Category whereTop($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Category whereUpdatedAt($value)
  * @mixin \Eloquent

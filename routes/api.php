@@ -16,6 +16,7 @@ Route::prefix('v1')->group(function () {
 
     Route::get('brands/top', 'Api\BrandController@top');
     Route::apiResource('brands', 'Api\BrandController')->only('index');
+    Route::apiResource('announcement', 'Api\AnnouncementController')->only('index');
 
     Route::apiResource('business-settings', 'Api\BusinessSettingController')->only('index');
 

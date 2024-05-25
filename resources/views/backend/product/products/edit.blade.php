@@ -379,6 +379,22 @@
                     </div>
                 </div>
             </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0 h6">{{ translate('Product Short Description') }}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label class="col-lg-3 col-from-label">{{ translate('Short Description') }} <i
+                                class="las la-language text-danger" title="{{ translate('Translatable') }}"></i></label>
+                        <div class="col-lg-9">
+                            <textarea class="aiz-text-editor" name="short_description">{{ $product->getTranslation('short_description', $lang) }}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="card">
                 <div class="card-header">
                     <h5 class="mb-0 h6">{{ translate('Product Description') }}</h5>

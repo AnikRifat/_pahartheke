@@ -100,6 +100,13 @@
                         </a>
                         <!--Submenu-->
                         <ul class="aiz-side-nav-list level-2">
+                             
+                            <li class="aiz-side-nav-item">
+                                <a href="{{ route('announcement.index') }}"
+                                    class="aiz-side-nav-link {{ areActiveRoutes(['announcement.index', 'announcement.create', 'announcement.edit']) }}">
+                                    <span class="aiz-side-nav-text">{{ translate('Announcement') }}</span>
+                                </a>
+                            </li>
                             <li class="aiz-side-nav-item">
                                 <a class="aiz-side-nav-link" href="{{ route('products.create') }}">
                                     <span class="aiz-side-nav-text">{{ translate('Add New product') }}</span>

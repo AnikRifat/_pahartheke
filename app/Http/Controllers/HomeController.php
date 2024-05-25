@@ -29,6 +29,7 @@ use App\Utility\TranslationUtility;
 use App\Utility\CategoryUtility;
 use Illuminate\Auth\Events\PasswordReset;
 use App\Http\Resources\HomeInfiniteCollection;
+use DB;
 
 
 
@@ -60,9 +61,12 @@ class HomeController extends Controller
 
         // $response = $this->send_event($event_info, $user_info);
         // dd('ok');
-
+        
+        $home_announ =  DB::table('announcements')->where('id', '=', 1)->where('status', '=', 1)->limit(1)->get();
+        
+       // print_r($home_announ);
         // Conversation api ViewConent Event end//
-        return view('frontend.index');
+        return view('frontend.index',['home_announ' => $home_announ]);
     }
 
     public function login()
@@ -299,7 +303,10 @@ class HomeController extends Controller
     public function all_categories(Request $request)
     {
         $categories = Category::where('level', 0)->orderBy('name', 'asc')->get();
-        return view('frontend.all_category', compact('categories'));
+        
+        $cat_announ =  DB::table('announcements')->where('id', '=', 2)->where('status', '=', 1)->limit(1)->get();
+         
+        return view('frontend.all_category', compact('categories','cat_announ'));
     }
     public function all_brands(Request $request)
     {

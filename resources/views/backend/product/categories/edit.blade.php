@@ -29,6 +29,12 @@
                         <input type="text" name="name" value="{{ $category->getTranslation('name', $lang) }}" class="form-control" id="name" placeholder="{{translate('Name')}}" required>
                     </div>
                 </div>
+                 <div class="form-group row">
+                    <label class="col-md-3 col-form-label">Message</label>
+                    <div class="col-md-9">
+                        <input type="text" name="msg" value="{{ $category->msg }}" class="form-control" id="msg" placeholder="Message">
+                    </div>
+                </div>
                 <div class="form-group row">
                     <label class="col-md-3 col-form-label">{{translate('Parent Category')}}</label>
                     <div class="col-md-9">

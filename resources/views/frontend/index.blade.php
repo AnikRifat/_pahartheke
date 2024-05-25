@@ -153,6 +153,24 @@
 
 @endsection
 
+
+        
+@if($home_announ->count() == 1)
+<div class="modal fade" id="HomePageModal" tabindex="-1" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-body">
+             <button type="button" class="close absolute-top-right btn-icon close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="la-2x">&times;</span>
+            </button>
+            <img class="rounded mx-auto d-block w-100" src="{{ uploaded_asset($home_announ[0]->logo) }}" alt="">
+            <p class="text-center mt-2">{{ $home_announ[0]->name}}</p>
+        </div>
+      </div>
+    </div>
+</div>
+@endif
+
 @section('script')
     <script>
         $(document).ready(function(){
@@ -165,4 +183,10 @@
             });
         });
     </script>
+    
+    <script type="text/javascript">
+    $(window).on('load', function() {
+        $('#HomePageModal').modal('show');
+    });
+</script>
 @endsection

@@ -80,8 +80,9 @@
                             <h1 class="mb-2 fs-20 fw-600">
                                 {{ $detailedProduct->getTranslation('name') }}
                             </h1>
-
+                           
                             <div class="row align-items-center">
+                            
                                 <div class="col-6">
                                     @php
                                         $total = 0;
@@ -115,7 +116,16 @@
                             </div>
 
                             <hr>
-
+                            <div class="align-items-justify">
+                                <div class="col-auto">
+                                    <p>
+                                        <?php echo $detailedProduct->getTranslation('short_description'); ?>
+                                        
+                                    </p>
+                                  
+                                </div>
+                            </div>
+                              <hr>
                             <div class="row align-items-center">
                                 <div class="col-auto">
                                     <small class="mr-2 opacity-50">{{ translate('Sold by') }}: </small><br>
