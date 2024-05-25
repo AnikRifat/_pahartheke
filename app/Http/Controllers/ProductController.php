@@ -189,6 +189,7 @@ class ProductController extends Controller
         $product->tags = implode(',', $tags);
 
         $product->description = $request->description;
+        $product->short_description = $request->short_description;
         $product->video_provider = $request->video_provider;
         $product->video_link = $request->video_link;
         $product->unit_price = $request->unit_price;
@@ -332,6 +333,7 @@ class ProductController extends Controller
         $product_translation->name = $request->name;
         $product_translation->unit = $request->unit;
         $product_translation->description = $request->description;
+        $product_translation->short_description = $request->short_description;
         $product_translation->save();
 
         flash(translate('Product has been inserted successfully'))->success();
@@ -432,6 +434,7 @@ class ProductController extends Controller
             $product->name = $request->name;
             $product->unit = $request->unit;
             $product->description = $request->description;
+            $product->short_description = $request->short_description;
             $product->slug = strtolower($request->slug);
         }
 
@@ -580,6 +583,7 @@ class ProductController extends Controller
         $product_translation->name = $request->name;
         $product_translation->unit = $request->unit;
         $product_translation->description = $request->description;
+        $product_translation->short_description = $request->short_description;
         $product_translation->save();
 
         flash(translate('Product has been updated successfully'))->success();

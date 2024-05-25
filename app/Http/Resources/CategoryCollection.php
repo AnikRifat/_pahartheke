@@ -13,6 +13,7 @@ class CategoryCollection extends ResourceCollection
             'data' => $this->collection->map(function($data) {
                 return [
                     'name' => $data->name,
+                    'msg' => $data->msg,
                     'banner' => api_asset($data->banner),
                     'icon' => api_asset($data->icon),
                     'number_of_children' => CategoryUtility::get_immediate_children_count($data->id),

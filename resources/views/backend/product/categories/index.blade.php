@@ -32,6 +32,7 @@
                 <tr>
                     <th>#</th>
                     <th>{{translate('Name')}}</th>
+                    <th>Message</th>
 					<th>{{ translate('Parent Category') }}</th>
 					<th>{{ translate('Level') }}</th>
                     <th>{{translate('Banner')}}</th>
@@ -46,6 +47,7 @@
                     <tr>
                         <td>{{ ($key+1) + ($categories->currentPage() - 1)*$categories->perPage() }}</td>
                         <td>{{ $category->getTranslation('name') }}</td>
+                        <td>{{ $category->msg }}</td>
                         <td>
                             @php
                                 $parent = \App\Category::where('id', $category->parent_id)->first();

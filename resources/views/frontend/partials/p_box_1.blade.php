@@ -21,6 +21,27 @@
             @endif
             <span class="fw-600 text-primary">{{ home_discounted_base_price($product->id) }}</span>
         </div>
+        
+         @php
+        $qty = 0;
+        if($product->variant_product){
+            foreach ($product->stocks as $key => $stock) {
+                $qty += $stock->qty;
+            }
+        }
+        else{
+            $qty = $product->current_stock;
+        }
+        @endphp
+        
+        <div class="fs-15 mb-2">
+        @if ($qty > 0)
+            <span class="badge badge-md badge-inline badge-pill badge-success">{{ translate('In stock') }}</span>
+        @else
+            <span class="badge badge-md badge-inline badge-pill badge-danger">{{ translate('Out of stock') }}</span>
+        @endif
+         </div>   
+        
         @if ($product->variant_product == 1)
             <button type="button" onclick="showAddToCartModal({{ $product->id }})"
                 class="btn btn-sm fs-12 btn-primary text-dark text-uppercase rounded-pill fw-600">

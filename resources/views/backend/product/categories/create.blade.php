@@ -17,6 +17,12 @@
                     </div>
                 </div>
                 <div class="form-group row">
+                    <label class="col-md-3 col-form-label">Message</label>
+                    <div class="col-md-9">
+                        <input type="text" placeholder="Message" id="msg" name="msg" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group row">
                     <label class="col-md-3 col-form-label">{{translate('Parent Category')}}</label>
                     <div class="col-md-9">
                         <select class="select2 form-control aiz-selectpicker" name="parent_id" data-toggle="select2" data-placeholder="Choose ..." data-live-search="true">

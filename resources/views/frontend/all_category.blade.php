@@ -22,6 +22,17 @@
 </section>
 <section class="mb-4">
     <div class="container">
+        @if($cat_announ->count() == 1)
+        
+            <div class="card border-primary">
+                  <div class="card-body">
+                    <h5 class="card-title text-center">{{ $cat_announ[0]->name}}</h5>
+                  </div>
+                <img class="rounded mx-auto d-block w-100" src="{{ uploaded_asset($cat_announ[0]->logo) }}" alt="">
+            </div>
+       
+        @endif
+        
         @foreach ($categories as $key => $category)
             <div class="mb-3 bg-white shadow-sm rounded">
                 <div class="p-3 border-bottom fs-16 fw-600">

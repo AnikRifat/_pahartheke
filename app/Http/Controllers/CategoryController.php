@@ -54,6 +54,7 @@ class CategoryController extends Controller
     {
         $category = new Category;
         $category->name = $request->name;
+        $category->msg = $request->msg;
         $category->digital = $request->digital;
         $category->banner = $request->banner;
         $category->icon = $request->icon;
@@ -133,6 +134,7 @@ class CategoryController extends Controller
         if($request->lang == env("DEFAULT_LANGUAGE")){
             $category->name = $request->name;
         }
+        $category->msg = $request->msg;
         $category->digital = $request->digital;
         $category->banner = $request->banner;
         $category->icon = $request->icon;

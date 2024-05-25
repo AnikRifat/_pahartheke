@@ -305,6 +305,19 @@
             </div>
             <div class="card">
                 <div class="card-header">
+                    <h5 class="mb-0 h6">{{ translate('Product Short Description') }}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label class="col-md-3 col-from-label">{{ translate('Short Description') }}</label>
+                        <div class="col-md-8">
+                            <textarea class="aiz-text-editor" name="short_description"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
                     <h5 class="mb-0 h6">{{ translate('Product Description') }}</h5>
                 </div>
                 <div class="card-body">

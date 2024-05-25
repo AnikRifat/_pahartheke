@@ -27,6 +27,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
 	Route::resource('brands', 'BrandController');
 	Route::get('/brands/edit/{id}', 'BrandController@edit')->name('brands.edit');
 	Route::get('/brands/destroy/{id}', 'BrandController@destroy')->name('brands.destroy');
+	
+	Route::resource('announcement', 'AnnouncementController');
+	Route::get('/announcement/edit/{id}', 'AnnouncementController@edit')->name('announcement.edit');
 
 	Route::get('/products/admin', 'ProductController@admin_products')->name('products.admin');
 	Route::get('/products/seller', 'ProductController@seller_products')->name('products.seller');

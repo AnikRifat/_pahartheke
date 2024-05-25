@@ -244,6 +244,9 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                
+                               
+            
                                 @if (get_setting('vendor_system_activation') == 1)
                                 <div class="form-group ml-2 mr-0 w-200px d-none d-md-block">
                                     <label class="mb-0 opacity-50">{{ translate('Sellers')}}</label>
@@ -264,6 +267,18 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        <!--Categories wise messages start-->
+                        @if(!empty(\App\Category::find($category_id)->msg))
+                         <div class="card border-danger">
+                              <div class="card-body">
+                                    <h5 class="card-title text-center text-danger">{{ \App\Category::find($category_id)->msg }}</h5>
+                              </div>
+                        </div>
+                         @endif
+                        <!--Categories wise messages start-->
+                        
+                        
                         <input type="hidden" name="min_price" value="">
                         <input type="hidden" name="max_price" value="">
                         <div class="row gutters-5 row-cols-xxl-4 row-cols-xl-3 row-cols-lg-4 row-cols-md-3 row-cols-2">
@@ -284,6 +299,26 @@
 
 @endsection
 
+
+@if(!empty(\App\Category::find($category_id)->msg))
+<div class="modal fade" id="categoryWiseModal" tabindex="-1" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-body">
+             <button type="button" class="close absolute-top-right btn-icon close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="la-2x ml-2 text-success">&times;</span>
+             </button>
+            <div class="card border-success">
+                  <div class="card-body">
+                        <h3 class="card-title text-center text-success">{{ \App\Category::find($category_id)->msg }}</h3>
+                  </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>
+@endif
+
 @section('script')
     <script type="text/javascript">
         function filter(){
@@ -295,4 +330,9 @@
             filter();
         }
     </script>
+     <script type="text/javascript">
+    $(window).on('load', function() {
+        $('#categoryWiseModal').modal('show');
+    });
+</script>
 @endsection
