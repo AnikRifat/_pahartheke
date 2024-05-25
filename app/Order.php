@@ -47,4 +47,9 @@ class Order extends Model
     {
         return $this->hasMany(ClubPoint::class);
     }
+
+    public function deliveryBoy()
+    {
+        return $this->hasOne(DeliveryMan::class,'id','delivery_man_id');
+    }
 }

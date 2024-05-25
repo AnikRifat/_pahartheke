@@ -20,6 +20,7 @@ use App\OtpConfiguration;
 use App\User;
 use App\BusinessSetting;
 use App\CommissionHistory;
+use App\DeliveryMan;
 use Auth;
 use Session;
 use DB;
@@ -74,6 +75,7 @@ class OrderController extends Controller
     {
         $payment_status = null;
         $delivery_status = null;
+        $delivery_man_id = null;
         $date = $request->date;
         $sort_search = null;
         $orders = Order::orderByRaw('CASE WHEN orders.pos_order = 1 THEN orders.created_at ELSE orders.updated_at END DESC');
@@ -108,6 +110,11 @@ class OrderController extends Controller
             });
             $delivery_status = $request->delivery_status;
         }
+
+        if ($request->delivery_man_id != null) {
+            $orders = $orders->where('delivery_man_id', $request->delivery_man_id);;
+            $delivery_man_id = $request->delivery_man_id;
+        }
     
         $dateName = $date ? $date : Carbon::now();
     
@@ -122,10 +129,11 @@ class OrderController extends Controller
             $orders = $orders->latest()->get();
             return view('backend.sales.all_orders.print', compact('data','orders'));
         }
+        $deliverymen = DeliveryMan::all();
     
         $orders = $date ? $orders->get() : $orders->paginate(15);
         $paginate = $date ? false : true;
-        return view('backend.sales.all_orders.index', compact('data','orders', 'sort_search', 'date','paginate','delivery_status','payment_status'));
+        return view('backend.sales.all_orders.index', compact('data','orders', 'sort_search','delivery_man_id', 'date','paginate','delivery_status','payment_status','deliverymen'));
     }
     
     

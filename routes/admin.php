@@ -274,7 +274,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
 	Route::post('discount-ruls-update/{id}', 'DiscountRuleController@update')->name('discount.update');
 	Route::get('discount-ruls-delete/{id}', 'DiscountRuleController@delete')->name('discount.delete');
 
-
+	Route::resource('deliveryman', 'DeliverymenController');
+	Route::get('/deliveryman/delete/{deliveryMan}', 'DeliverymenController@destroy')->name('deliveryman.destroy');
+	Route::post('orders/{order}/assign-delivery-man', 'DeliverymenController@assignDeliveryMan')->name('orders.assignDeliveryMan');
 
 	//Added by anik rifat
 	Route::get('/cm', 'CrmController@index')->name('cm.index');

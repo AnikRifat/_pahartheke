@@ -58,6 +58,18 @@
                             {{ translate('Delivered') }}</option>
                     </select>
                 </div> --}}
+
+                <div class="col-lg-2 ml-auto">
+                    <select class="form-control aiz-selectpicker" name="delivery_man_id" id="delivery_man_id" onchange="sort_orders()">
+                        <option value="">{{ translate('Filter by Delivery Man') }}</option>
+                        @foreach($deliverymen as $deliveryMan)
+                            <option value="{{ $deliveryMan->id }}"
+                                @isset($selected_delivery_man) @if ($selected_delivery_man == $deliveryMan->id) selected @endif @endisset>
+                                {{ $deliveryMan->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
                 <div class="col-auto">
                     <div class="form-group mb-0">
                         <button type="submit" class="btn btn-primary"value="filter"
@@ -132,6 +144,7 @@
                         <th data-breakpoints="md">{{ translate('Customer Lifetime Orders') }}</th>
                         <th data-breakpoints="md">{{ translate('Amount') }}</th>
                         <th data-breakpoints="md">{{ translate(discount_col_name(1)) }}</th>
+                        <th data-breakpoints="md">{{ translate('Delivery Boy') }}</th>
                         <th data-breakpoints="md">{{ translate('Delivery Status') }}</th>
                         <th data-breakpoints="md">{{ translate('Payment Status') }}</th>
                         @if ($refund_request_addon != null && $refund_request_addon->activated == 1)
@@ -143,110 +156,164 @@
                 <tbody>
 
                     @foreach ($orders as $key => $order)
-                    <tr>
-                        <td>
-                            {{ $key + 1 }}
-                        </td>
-                        <td>
-                            {{ $order->code }}
-                            @if ($order->cancelled)
-                                <span class="badge badge-inline badge-danger">{{ translate('Cancelled') }}</span>
-                            @endif
-                        </td>
-                        <td>
-                            {{ count($order->orderDetails) }}
-                        </td>
-                        <td>
-                            @if ($order->user != null)
-                                Name: {{ $order->user->name ?? '' }}
-                                <br>
-                                Phone: {{ $order->user->phone ?? '' }}
-                            @else
-                                Guest ({{ $order->guest_id ?? '' }})
-                                <br>
-                                Guest ({{ $order->phone ?? '' }})
-                            @endif
-                        </td>
-                        <td>
-                            <span class="badge badge-inline badge-info">{{ count(optional($order->user)->orders ?? []) }}</span>
-                            @if (count(optional($order->user)->orders ?? []) < 2)
-                                <span class="badge badge-inline badge-success">New</span>
-                            @endif
-                        </td>
-                        <td>
-                            {{ single_price(($order->grand_total ?? 0) - ($order->total_discount ?? 0)) }}
-                        </td>
-                        <td>
-                            {{ single_price($order->total_discount ?? 0) }}
-                        </td>
-                        <td>
-                            @php
-                                $status = optional($order->orderDetails->first())->delivery_status;
-                            @endphp
-                            {{ translate(ucfirst(str_replace('_', ' ', $status))) }}
-                        </td>
-                        <td>
-                            @if ($order->payment_status == 'paid')
-                                <span class="badge badge-inline badge-success">{{ translate('Paid') }}</span>
-                            @elseif($order->payment_status == 'unpaid')
-                                <span class="badge badge-inline badge-danger">{{ translate('Unpaid') }}</span>
-                            @else
-                                <span class="badge badge-inline badge-info">{{ translate('Advance Paid') }}</span>
-                            @endif
-                        </td>
-                        @if ($refund_request_addon != null && $refund_request_addon->activated == 1)
+                        <tr>
                             <td>
-                                @if (count($order->refund_requests ?? []) > 0)
-                                    {{ count($order->refund_requests) }} {{ translate('Refund') }}
-                                @else
-                                    {{ translate('No Refund') }}
+                                {{ $key + 1 }}
+                            </td>
+                            <td>
+                                {{ $order->code }}
+                                @if ($order->cancelled)
+                                    <span class="badge badge-inline badge-danger">{{ translate('Cancelled') }}</span>
                                 @endif
                             </td>
-                        @endif
-                        <td class="text-right">
-                            <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="javascript:void(0)"
-                                onclick="print_a4_invoice('{{ route('admin.invoice.print_a4', $order->id) }}')"
-                                title="{{ translate('Print invoice') }}">
-                                <i class="las la-print"></i>
-                            </a>
-                            <a class="btn btn-soft-primary btn-icon btn-circle btn-sm"
-                                href="{{ route('all_orders.show', encrypt($order->id)) }}"
-                                title="{{ translate('View') }}">
-                                <i class="las la-eye"></i>
-                            </a>
-                            <a class="btn btn-soft-primary btn-icon btn-circle btn-sm"
-                                href="{{ route('all_orders.edit', $order->id) }}" title="{{ translate('edit') }}">
-                                <i class="las la-pen"></i>
-                            </a>
-                            <a class="btn btn-soft-primary btn-icon btn-circle btn-sm"
-                                href="{{ route('invoice.download', $order->id) }}"
-                                title="{{ translate('Download Invoice') }}">
-                                <i class="las la-download"></i>
-                            </a>
-                            @if (!$order->cancelled)
-                                <a class="btn btn-soft-danger btn-icon btn-circle btn-sm"
-                                    href="{{ route('orders.cancel', $order->id) }}" title="{{ translate('Cancel') }}">
-                                    <i class="las la-times"></i>
-                                </a>
+                            <td>
+                                {{ count($order->orderDetails) }}
+                            </td>
+                            <td>
+                                @if ($order->user != null)
+                                    Name: {{ $order->user->name ?? '' }}
+                                    <br>
+                                    Phone: {{ $order->user->phone ?? '' }}
+                                @else
+                                    Guest ({{ $order->guest_id ?? '' }})
+                                    <br>
+                                    Guest ({{ $order->phone ?? '' }})
+                                @endif
+                            </td>
+                            <td>
+                                <span
+                                    class="badge badge-inline badge-info">{{ count(optional($order->user)->orders ?? []) }}</span>
+                                @if (count(optional($order->user)->orders ?? []) < 2)
+                                    <span class="badge badge-inline badge-success">New</span>
+                                @endif
+                            </td>
+                            <td>
+                                {{ single_price(($order->grand_total ?? 0) - ($order->total_discount ?? 0)) }}
+                            </td>
+                            <td>
+                                {{ single_price($order->total_discount ?? 0) }}
+                            </td>
+                            <td>
+                                @if ($order->deliveryBoy)
+                                    {{ $order->deliveryBoy->name }}
+                                @else
+                                    <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" title="Assign Delivery Man"
+                                        data-toggle="modal" data-target="#assignDeliveryManModal-{{ $order->id }}">
+                                        <i class="las la-plus"></i>
+                                    </a>
+
+
+                                    <div class="modal fade" id="assignDeliveryManModal-{{ $order->id }}" tabindex="-1"
+                                        aria-labelledby="assignDeliveryManModalLabel-{{ $order->id }}"
+                                        aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title"
+                                                        id="assignDeliveryManModalLabel-{{ $order->id }}">
+                                                        {{ translate('Assign Delivery Man') }}</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <form action="{{ route('orders.assignDeliveryMan', $order->id) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    <div class="modal-body">
+                                                        <div class="form-group">
+                                                            <label
+                                                                for="deliveryManSelect-{{ $order->id }}">{{ translate('Select Delivery Man') }}</label>
+                                                            <select class="form-control"
+                                                                id="deliveryManSelect-{{ $order->id }}"
+                                                                name="delivery_man_id" required>
+                                                                <option value="">
+                                                                    {{ translate('Choose Delivery Man') }}</option>
+                                                                @foreach ($deliverymen as $deliveryMan)
+                                                                    <option value="{{ $deliveryMan->id }}">
+                                                                        {{ $deliveryMan->name }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">{{ translate('Close') }}</button>
+                                                        <button type="submit"
+                                                            class="btn btn-primary">{{ translate('Assign') }}</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+
+                            </td>
+                            <td>
+                                @php
+                                    $status = optional($order->orderDetails->first())->delivery_status;
+                                @endphp
+                                {{ translate(ucfirst(str_replace('_', ' ', $status))) }}
+                            </td>
+                            <td>
+                                @if ($order->payment_status == 'paid')
+                                    <span class="badge badge-inline badge-success">{{ translate('Paid') }}</span>
+                                @elseif($order->payment_status == 'unpaid')
+                                    <span class="badge badge-inline badge-danger">{{ translate('Unpaid') }}</span>
+                                @else
+                                    <span class="badge badge-inline badge-info">{{ translate('Advance Paid') }}</span>
+                                @endif
+                            </td>
+                            @if ($refund_request_addon != null && $refund_request_addon->activated == 1)
+                                <td>
+                                    @if (count($order->refund_requests ?? []) > 0)
+                                        {{ count($order->refund_requests) }} {{ translate('Refund') }}
+                                    @else
+                                        {{ translate('No Refund') }}
+                                    @endif
+                                </td>
                             @endif
-                            <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete"
-                                data-href="{{ route('orders.destroy', $order->id) }}"
-                                title="{{ translate('Delete') }}">
-                                <i class="las la-trash"></i>
-                            </a>
-                        </td>
-                    </tr>
-
-
-
-
+                            <td class="text-right">
+                                <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="javascript:void(0)"
+                                    onclick="print_a4_invoice('{{ route('admin.invoice.print_a4', $order->id) }}')"
+                                    title="{{ translate('Print invoice') }}">
+                                    <i class="las la-print"></i>
+                                </a>
+                                <a class="btn btn-soft-primary btn-icon btn-circle btn-sm"
+                                    href="{{ route('all_orders.show', encrypt($order->id)) }}"
+                                    title="{{ translate('View') }}">
+                                    <i class="las la-eye"></i>
+                                </a>
+                                <a class="btn btn-soft-primary btn-icon btn-circle btn-sm"
+                                    href="{{ route('all_orders.edit', $order->id) }}" title="{{ translate('edit') }}">
+                                    <i class="las la-pen"></i>
+                                </a>
+                                <a class="btn btn-soft-primary btn-icon btn-circle btn-sm"
+                                    href="{{ route('invoice.download', $order->id) }}"
+                                    title="{{ translate('Download Invoice') }}">
+                                    <i class="las la-download"></i>
+                                </a>
+                                @if (!$order->cancelled)
+                                    <a class="btn btn-soft-danger btn-icon btn-circle btn-sm"
+                                        href="{{ route('orders.cancel', $order->id) }}"
+                                        title="{{ translate('Cancel') }}">
+                                        <i class="las la-times"></i>
+                                    </a>
+                                @endif
+                                <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete"
+                                    data-href="{{ route('orders.destroy', $order->id) }}"
+                                    title="{{ translate('Delete') }}">
+                                    <i class="las la-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
                     @endforeach
                 </tbody>
             </table>
             @if ($paginate)
-            <div class="aiz-pagination">
-                {{ $orders->appends(request()->input())->links() }}
-            </div>
+                <div class="aiz-pagination">
+                    {{ $orders->appends(request()->input())->links() }}
+                </div>
             @endif
 
         </div>

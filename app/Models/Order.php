@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\DeliveryMan;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 
@@ -54,5 +55,11 @@ class Order extends Model
     public function orderDetails()
     {
         return $this->hasMany(OrderDetail::class);
+    }
+
+    
+    public function deliveryBoy()
+    {
+        return $this->hasOne(DeliveryMan::class,'id','delivery_man_id');
     }
 }

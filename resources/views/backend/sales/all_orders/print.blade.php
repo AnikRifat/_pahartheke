@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,8 +53,9 @@
     </style>
 </head>
 @php
-$refund_request_addon = \App\Addon::where('unique_identifier', 'refund_request')->first();
+    $refund_request_addon = \App\Addon::where('unique_identifier', 'refund_request')->first();
 @endphp
+
 <body>
 
     <table class="table">
@@ -88,6 +90,7 @@ $refund_request_addon = \App\Addon::where('unique_identifier', 'refund_request')
                 <th data-breakpoints="md">{{ translate('Amount') }}</th>
                 <th data-breakpoints="md">{{ translate(discount_col_name(1)) }}</th>
                 <th data-breakpoints="md">{{ translate('shipping Charge') }}</th>
+                <th data-breakpoints="md">{{ translate('Delivery Man') }}</th>
                 <th data-breakpoints="md">{{ translate('Delivery Status') }}</th>
                 <th data-breakpoints="md">{{ translate('Payment Status') }}</th>
                 @if ($refund_request_addon != null && $refund_request_addon->activated == 1)
@@ -98,76 +101,78 @@ $refund_request_addon = \App\Addon::where('unique_identifier', 'refund_request')
         <tbody>
 
             @foreach ($orders as $key => $order)
-            {{-- {{dd($order)}} --}}
-            <tr>
-                <td>
-                    {{ $key + 1 }}
-                </td>
-                <td>
-                    {{ $order->code }}
-                    @if ($order->cancelled)
-                        <span class="badge badge-inline badge-danger">{{ translate('Cancelled') }}</span>
-                    @endif
-                </td>
-                <td>
-                    {{ count($order->orderDetails) }}
-                </td>
-                <td>
-                    @if ($order->user != null)
-                        Name: {{ $order->user->name ?? '' }}
-                        <br>
-                        Phone: {{ $order->user->phone ?? '' }}
-                    @else
-                        Guest ({{ $order->guest_id ?? '' }})
-                        <br>
-                        Guest ({{ $order->phone ?? '' }})
-                    @endif
-                </td>
-                <td>
-                    <span class="badge badge-inline badge-info">{{ count(optional($order->user)->orders ?? []) }}</span>
-                    @if (count(optional($order->user)->orders ?? []) < 2)
-                        <span class="badge badge-inline badge-success">(New)</span>
-                    @endif
-                </td>
-                <td>
-                    {{ single_price(($order->grand_total ?? 0) - ($order->total_discount ?? 0)) }}
-                </td>
-                <td>
-                    {{ single_price($order->total_discount) }}
-                </td>
-                <td>
-                    {{ single_price($order->orderDetails->first()->shipping_cost) }}
-                </td>
-                <td>
-                    @php
-                        $status = optional($order->orderDetails->first())->delivery_status;
-                    @endphp
-                    {{ translate(ucfirst(str_replace('_', ' ', $status))) }}
-                </td>
-                <td>
-                    @if ($order->payment_status == 'paid')
-                        <span class="badge badge-inline badge-success">{{ translate('Paid') }}</span>
-                    @elseif($order->payment_status == 'unpaid')
-                        <span class="badge badge-inline badge-danger">{{ translate('Unpaid') }}</span>
-                    @else
-                        <span class="badge badge-inline badge-info">{{ translate('Advance Paid') }}</span>
-                    @endif
-                </td>
-                @if ($refund_request_addon != null && $refund_request_addon->activated == 1)
+                {{-- {{dd($order)}} --}}
+                <tr>
                     <td>
-                        @if (count($order->refund_requests ?? []) > 0)
-                            {{ count($order->refund_requests) }} {{ translate('Refund') }}
-                        @else
-                            {{ translate('No Refund') }}
+                        {{ $key + 1 }}
+                    </td>
+                    <td>
+                        {{ $order->code }}
+                        @if ($order->cancelled)
+                            <span class="badge badge-inline badge-danger">{{ translate('Cancelled') }}</span>
                         @endif
                     </td>
-                @endif
+                    <td>
+                        {{ count($order->orderDetails) }}
+                    </td>
+                    <td>
+                        @if ($order->user != null)
+                            Name: {{ $order->user->name ?? '' }}
+                            <br>
+                            Phone: {{ $order->user->phone ?? '' }}
+                        @else
+                            Guest ({{ $order->guest_id ?? '' }})
+                            <br>
+                            Guest ({{ $order->phone ?? '' }})
+                        @endif
+                    </td>
+                    <td>
+                        <span
+                            class="badge badge-inline badge-info">{{ count(optional($order->user)->orders ?? []) }}</span>
+                        @if (count(optional($order->user)->orders ?? []) < 2)
+                            <span class="badge badge-inline badge-success">(New)</span>
+                        @endif
+                    </td>
+                    <td>
+                        {{ single_price(($order->grand_total ?? 0) - ($order->total_discount ?? 0)) }}
+                    </td>
+                    <td>
+                        {{ single_price($order->total_discount) }}
+                    </td>
+                    <td>
+                        {{ single_price($order->orderDetails->first()->shipping_cost) }}
+                    </td>
+                    <td>
+                        @if ($order->deliveryBoy)
+                            {{ $order->deliveryBoy->name }}
+                            @enif
+                    </td>
+                    <td>
+                        @php
+                            $status = optional($order->orderDetails->first())->delivery_status;
+                        @endphp
+                        {{ translate(ucfirst(str_replace('_', ' ', $status))) }}
+                    </td>
+                    <td>
+                        @if ($order->payment_status == 'paid')
+                            <span class="badge badge-inline badge-success">{{ translate('Paid') }}</span>
+                        @elseif($order->payment_status == 'unpaid')
+                            <span class="badge badge-inline badge-danger">{{ translate('Unpaid') }}</span>
+                        @else
+                            <span class="badge badge-inline badge-info">{{ translate('Advance Paid') }}</span>
+                        @endif
+                    </td>
+                    @if ($refund_request_addon != null && $refund_request_addon->activated == 1)
+                        <td>
+                            @if (count($order->refund_requests ?? []) > 0)
+                                {{ count($order->refund_requests) }} {{ translate('Refund') }}
+                            @else
+                                {{ translate('No Refund') }}
+                            @endif
+                        </td>
+                    @endif
 
-            </tr>
-
-
-
-
+                </tr>
             @endforeach
             <tr>
                 <td>-</td>
@@ -250,9 +255,10 @@ $refund_request_addon = \App\Addon::where('unique_identifier', 'refund_request')
         </tbody>
     </table>
 </body>
+
 </html>
 
-    {{-- <div class="card">
+{{-- <div class="card">
 
         <div class="card-body">
             <div class="form-group mt-3 row">
@@ -308,5 +314,3 @@ $refund_request_addon = \App\Addon::where('unique_identifier', 'refund_request')
 
         </div>
     </div> --}}
-
-

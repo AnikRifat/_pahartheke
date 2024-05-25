@@ -32,6 +32,13 @@
                         <span class="aiz-side-nav-text">{{ translate('Customer Management') }}</span>
                     </a>
                 </li>
+
+                <li class="aiz-side-nav-item">
+                    <a href="{{ route('deliveryman.index') }}" class="aiz-side-nav-link">
+                        <i class="las la-home aiz-side-nav-icon"></i>
+                        <span class="aiz-side-nav-text">{{ translate('Delivery Man') }}</span>
+                    </a>
+                </li>
                 <!-- Inventory -->
                 @if (Auth::user()->user_type == 'admin' || in_array('2', json_decode(Auth::user()->staff->role->permissions)))
                     <li class="aiz-side-nav-item">
@@ -100,7 +107,7 @@
                         </a>
                         <!--Submenu-->
                         <ul class="aiz-side-nav-list level-2">
-                             
+
                             <li class="aiz-side-nav-item">
                                 <a href="{{ route('announcement.index') }}"
                                     class="aiz-side-nav-link {{ areActiveRoutes(['announcement.index', 'announcement.create', 'announcement.edit']) }}">
