@@ -145,7 +145,7 @@
                     <td>
                         @if ($order->deliveryBoy)
                             {{ $order->deliveryBoy->name }}
-                            @enif
+                            @endif
                     </td>
                     <td>
                         @php
