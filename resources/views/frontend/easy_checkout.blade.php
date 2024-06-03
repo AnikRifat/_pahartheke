@@ -30,7 +30,7 @@
                                         <div class="row gutters-2">
                                             <div class="col-12 mb-2">
                                                 <input type="text" class="form-control"
-                                                    onkeyup="getUserByPhone(this.value)" placeholder="Your Phone"
+                                                    onkeyup="getUserByPhone(this.value)" placeholder="Your Phone/ Whatsapp / massenger"
                                                     @if ($user) value="{{ $user->phone }}" @endif
                                                     name="phone" required>
                                             </div>

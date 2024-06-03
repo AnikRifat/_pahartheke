@@ -166,7 +166,7 @@
 			<table style="font-size: 12px">
 				<tr>
 					<td style="font-size: 1rem;" class="strong">{{ get_setting('site_name') }}</td>
-					<td class="text-right"></td>
+					<td class="text-right font-weight-bold">{{  translate('Life Time Order') }}: {{ count(optional($order->user)->orders ?? []) }} </td>
 				</tr>
 				<tr>
 					<td class="gry-color small">{{ get_setting('contact_address') }}</td>
@@ -179,6 +179,7 @@
 				<tr>
 					<td class="gry-color small">{{  translate('Phone') }}: {{ get_setting('contact_phone') }}</td>
 					<td class="text-right small"><span class="gry-color small">{{  translate('Order Date') }}:</span> <span class=" strong">{{ date('d-m-Y', $order->date) }}</span></td>
+
 				</tr>
 			</table>
 
@@ -259,13 +260,37 @@
 			            <th class="gry-color text-left" style="font-size: 13px">{{ translate('Advance Paid') }}</th>
 			            <td class="currency" style="font-size: 12px">{{ single_price($order->advance_payment) }}</td>
 			        </tr>
+                    <tr class="border-bottom" style="font-size: 12px">
+			            <th class="gry-color text-left" style="font-size: 13px">{{ translate('Previous Due') }}</th>
+			            <td class="currency" style="font-size: 12px">{{ single_price($order->previous_due_payment) }}</td>
+			        </tr>
 			        <tr style="font-size: 12px">
 			            <th class="text-left strong" style="font-size: 14px">{{ translate('Grand Total') }}</th>
-			            <td class="currency">{{ single_price($order->grand_total - $order->total_discount - $order->advance_payment)  }}</td>
+			            <td class="currency">{{ single_price($order->grand_total - $order->total_discount - $order->advance_payment + $order->previous_due_payment)  }}</td>
 			        </tr>
 		        </tbody>
 		    </table>
 	    </div>
+
+        <div style="padding: 0.1rem;">
+			<table class="padding border-bottom">
+				<thead>
+	                <tr class="gry-color" style="" style="font-size: 12px">
+	                    <th width="35%" class="text-left" style="font-size: 12px">{{ translate('Instructions') }}</th>
+	                </tr>
+				</thead>
+				<tbody class="strong">
+
+							<tr class="" style="font-size: 12px">
+								<td style="font-size: 12px"> {!! $order->order_note !!}</td>
+							</tr>
+
+	            </tbody>
+			</table>
+		</div>
+
+
+
 
 
 

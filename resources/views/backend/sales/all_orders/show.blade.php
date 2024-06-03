@@ -190,7 +190,7 @@
                                                 } elseif ($orderDetail->discount_type == 'percent' && $orderDetail->discount_percent) {
                                                     $the_discount = $orderDetail->discount_percent;
                                                 }
-                                                
+
                                                 ?>
                                                 <input type="text" class="form-control" value="{{ $the_discount }}"
                                                     name="discount[]">
@@ -225,6 +225,23 @@
                                 @endforeach
                             </tbody>
                         </table>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0 h6">{{ translate('Product Order Note') }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <label class="col-md-2 col-from-label">{{ translate('Order Note') }}</label>
+                                    <div class="col-md-10">
+                                        <textarea class="aiz-text-editor" name="order_note">
+                                            {!! $order->order_note !!}
+                                        </textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="clearfix float-right">
@@ -263,6 +280,15 @@
                                 <td>
                                     <input type="number" class="form-control" name="advance_payment"
                                         value="{{ $order->advance_payment }}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong class="text-muted">{{ translate('previous due') }} :</strong>
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control" name="previous_due_payment"
+                                        value="{{ $order->previous_due_payment }}">
                                 </td>
                             </tr>
                             <tr>

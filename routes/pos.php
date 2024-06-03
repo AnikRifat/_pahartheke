@@ -23,6 +23,7 @@ Route::post('/get_shipping_address', 'PosController@getShippingAddress')->name('
 Route::post('/get_shipping_address_seller', 'PosController@getShippingAddressForSeller')->name('pos.getShippingAddressForSeller');
 Route::post('/setDiscount', 'PosController@setDiscount')->name('pos.setDiscount');
 Route::post('/setAdvance', 'PosController@setAdvance')->name('pos.setAdvance');
+Route::post('/setPreviousDue', 'PosController@setPreviousDue')->name('pos.setPreviousDue');
 Route::post('/setShipping', 'PosController@setShipping')->name('pos.setShipping');
 Route::post('/set-shipping-address', 'PosController@set_shipping_address')->name('pos.set-shipping-address');
 Route::post('/pos-order', 'PosController@order_store')->name('pos.order_place');

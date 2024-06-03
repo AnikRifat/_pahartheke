@@ -267,6 +267,23 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="dropdown dropup">
+                                        <button class="btn btn-outline-dark btn-styled dropdown-toggle" type="button"
+                                            data-toggle="dropdown">
+                                            {{ translate('PreviousDue') }}
+                                        </button>
+                                        <div class="dropdown-menu p-3 dropdown-menu-lg">
+                                            <div class="input-group">
+                                                <input type="number" min="0" placeholder="Amount" name="previous_due"
+                                                    class="form-control flat_previous_due previous_due"
+                                                    value="{{ Session::get('pos_previous_due', 0) }}" required
+                                                    onchange="setPreviousDue()">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">{{ translate('Flat') }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="">
                                     <button type="button" class="btn btn-primary btn-block"
@@ -601,6 +618,17 @@
             $.post('{{ route('pos.setAdvance') }}', {
                 _token: '{{ csrf_token() }}',
                 advance: advance
+            }, function(data) {
+                $('#cart-details').html(data);
+                $('#product-variation').modal('hide');
+            });
+        }
+        function setPreviousDue() {
+            var previous_due = $('.flat_previous_due').val();
+            console.log(previous_due);
+            $.post('{{ route('pos.setPreviousDue') }}', {
+                _token: '{{ csrf_token() }}',
+                previous_due: previous_due
             }, function(data) {
                 $('#cart-details').html(data);
                 $('#product-variation').modal('hide');

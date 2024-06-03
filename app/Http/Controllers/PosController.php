@@ -285,6 +285,13 @@ class PosController extends Controller
         }
         return view('pos.cart');
     }
+    public function setPreviousDue(Request $request)
+    {
+        if ($request->previous_due >= 0) {
+            $request->session()->put('pos_previous_due', $request->previous_due);
+        }
+        return view('pos.cart');
+    }
     //set Shipping Cost
     public function setShipping(Request $request)
     {
@@ -499,8 +506,13 @@ class PosController extends Controller
                         $order->payment_status = 'advance';
                     }
                 }
-                $order->total_discount = $total_discount ? $total_discount : 0;
 
+                if (Session::has('pos_previous_due')) {
+                    $order->previous_due_payment = Session::get('pos_previous_due');
+                
+                }
+
+                $order->total_discount = $total_discount ? $total_discount : 0;
                 $order->save();
 
                 $array['view'] = 'emails.invoice';

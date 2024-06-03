@@ -213,9 +213,12 @@ class OrderController extends Controller
         }
         $coupon_discount = $request->coupon_discount ? $request->coupon_discount : 0;
         $advance_payment = $request->advance_payment ? $request->advance_payment : 0;
+        $previous_due_payment = $request->previous_due_payment ? $request->previous_due_payment : 0;
         $order = Order::findOrFail($id);
         $order->coupon_discount = $coupon_discount;
         $order->advance_payment = $advance_payment;
+        $order->order_note = $request->order_note;
+        $order->previous_due_payment = $previous_due_payment;
         $order->grand_total = ($grand_total + $shipping_cost) - $coupon_discount;
         $order->total_discount = $total_discount;
         $order->update();
